@@ -46,28 +46,10 @@ app.delete('/api/workouts/:id', async (req, res) => {
     res.status(204).send();
 });
 
-// ============ API NINJAS INTEGRATION ============
+// API NINJAS INTEGRATION 
 app.get('/api/exercises/search', async (req, res) => {
     const query = req.query.name;
     
-    if (!query) {
-        return res.status(400).json({ error: 'Exercise name is required' });
-    }
-
-    try {
-        const fetch = await import('node-fetch');
-        const response = await fetch.default(
-            `https://api.api-ninjas.com/v1/exercises?name=${query}`,
-            {
-                headers: {
-                    'X-Api-Key': process.env.EXERCISE_API_KEY
-                }
-            }
-        );
         const data = await response.json();
         res.json(data);
-    } catch (error) {
-        console.error('API Ninjas Error:', error);
-        res.status(500).json({ error: 'Failed to fetch exercises' });
-    }
-});
+});  ;
