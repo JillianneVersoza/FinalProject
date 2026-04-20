@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
+
 export class WorkoutService {
 
   private apiUrl = 'http://localhost:3000/workouts';
