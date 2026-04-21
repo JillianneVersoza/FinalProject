@@ -1,0 +1,112 @@
+<div class="container">
+    @if (successMessage()) {
+        <div class="success-message">{{ successMessage() }}</div>
+    }
+    
+    <!-- Search Section -->
+    <div class="search-section">
+        <h3>Search Exercises from API Ninjas</h3>
+        <div class="search-box">
+            <input type="text" [(ngModel)]="searchQuery" placeholder="e.g., pushup, squat, bench press" class="search-input">
+            <button (click)="searchExercise()" class="search-btn">Search</button>
+        </div>
+        
+        @if (showResults()) {
+            <div class="results">
+                @for (ex of workoutService.exerciseResults(); track ex.name) {
+                    <div class="result-card" (click)="selectExercise(ex)">
+                        <strong>{{ ex.name }}</strong>
+                        <span class="badge">{{ ex.muscle }}</span>
+                        <span class="badge">{{ ex.difficulty }}</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    
+    <hr />
+    
+    <!-- Form -->
+    <form [formGroup]="workoutForm" (ngSubmit)="onSubmit()">
+        <h3>{{ editingId() ? 'Edit Workout' : 'Log New Workout' }}</h3>
+        
+        <div class="form-group">
+            <label>Exercise Name *</label>
+            <input type="text" formControlName="exerciseName" placeholder="e.g., Bench Press">
+        </div>
+        
+        <div class="form-group">
+            <label>Category</label>
+            <select formControlName="category">
+                <option value="cardio"> Cardio</option>
+                <option value="strength"> Strength</option>
+                <option value="flexibility"> Flexibility</option>
+                <option value="hiit"> HIIT</option>
+                <option value="other"> Other</option>
+            </select>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group"><label>Sets</label><input type="number" formControlName="sets"></div>
+            <div class="form-group"><label>Reps</label><input type="number" formControlName="reps"></div>
+            <div class="form-group"><label>Weight (lbs)</label><input type="number" formControlName="weight"></div>
+            <div class="form-group"><label>Duration (min)</label><input type="number" formControlName="duration"></div>
+        </div>
+        
+        <div class="form-group">
+            <label> Calories Burned</label>
+            <input type="number" formControlName="caloriesBurned" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label>Notes</label>
+            <textarea formControlName="notes" rows="2" placeholder="Add notes..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" [disabled]="workoutForm.invalid" class="btn-primary">
+                {{ editingId() ? 'Update Workout' : 'Log Workout' }}
+            </button>
+            @if (editingId()) {
+                <button type="button" (click)="cancelEdit()" class="btn-secondary">Cancel</button>
+            }
+        </div>
+    </form>
+    
+    <hr />
+    
+    <!-- Workout List -->
+    <h3>Workout History ({{ workoutService.workoutList().length }})</h3>
+    
+    @if (workoutService.workoutList().length === 0) {
+        <div class="empty-state">
+            <p> No workouts logged yet!</p>
+            <p class="hint">Search for exercises above to get started</p>
+        </div>
+    }
+    
+    <div class="workout-grid">
+        @for (w of workoutService.workoutList(); track w._id) {
+            <div class="workout-card">
+                <div class="card-header">
+                    <span class="date">{{ w.date | date:'MMM d, yyyy' }}</span>
+                </div>
+                <div class="card-title">{{ w.exerciseName }}</div>
+                <div class="card-stats">
+                    @if (w.sets && w.sets > 0) { <span>{{ w.sets }} sets</span> }
+                    @if (w.reps && w.reps > 0) { <span>{{ w.reps }} reps</span> }
+                    @if (w.weight && w.weight > 0) { <span>{{ w.weight }} lbs</span> }
+                    <span>{{ w.duration }} min</span>
+                    <span> {{ w.caloriesBurned }} cal</span>
+                </div>
+                @if (w.notes) {
+                    <div class="card-notes"> {{ w.notes }}</div>
+                }
+                <div class="card-actions">
+                    <button (click)="startEdit(w)" class="btn-edit">Edit</button>
+                    <button (click)="deleteWorkout(w._id!)" class="btn-delete">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

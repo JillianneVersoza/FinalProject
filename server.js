@@ -3,21 +3,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-
 // Debug: Check if API key is loaded
 console.log('API Key loaded:', process.env.EXERCISE_API_KEY ? 'YES' : 'NO');
-
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB error:', err));
-
 
 // ============ WORKOUT SCHEMA ============
 const workoutSchema = new mongoose.Schema({
@@ -32,12 +28,9 @@ const workoutSchema = new mongoose.Schema({
     notes: String
 });
 
-
 const Workout = mongoose.model('Workout', workoutSchema);
 
-
 // ============ CRUD ROUTES ============
-
 
 // CREATE - Add workout
 app.post('/api/workouts', async (req, res) => {
@@ -51,7 +44,6 @@ app.post('/api/workouts', async (req, res) => {
     }
 });
 
-
 // READ - Get all workouts
 app.get('/api/workouts', async (req, res) => {
     try {
@@ -63,13 +55,12 @@ app.get('/api/workouts', async (req, res) => {
     }
 });
 
-
 // UPDATE - Update workout
 app.put('/api/workouts/:id', async (req, res) => {
     try {
         const updatedWorkout = await Workout.findByIdAndUpdate(
-            req.params.id,
-            req.body,
+            req.params.id, 
+            req.body, 
             { new: true }
         );
         res.json(updatedWorkout);
@@ -78,7 +69,6 @@ app.put('/api/workouts/:id', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
-
 
 // DELETE - Delete workout
 app.delete('/api/workouts/:id', async (req, res) => {
@@ -91,15 +81,13 @@ app.delete('/api/workouts/:id', async (req, res) => {
     }
 });
 
-
 // ============ API NINJAS SEARCH ============
 app.get('/api/exercises/search', async (req, res) => {
     const query = req.query.name;
-   
+    
     if (!query) {
         return res.status(400).json({ error: 'Exercise name is required' });
     }
-
 
     try {
         const fetch = await import('node-fetch');
@@ -119,10 +107,7 @@ app.get('/api/exercises/search', async (req, res) => {
     }
 });
 
-
 // ============ START SERVER ============
 app.listen(3000, () => {
     console.log("Server is running on port 3000!");
 });
-
-
