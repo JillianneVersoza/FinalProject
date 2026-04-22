@@ -15,7 +15,12 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB error:', err));
 
-// ============ WORKOUT SCHEMA ============
+// START SERVER 
+app.listen(3000, () => {
+    console.log("Server is running on port 3000!");
+});    
+
+// this is a workout schema 
 const workoutSchema = new mongoose.Schema({
     exerciseName: String,
     category: String,
@@ -30,7 +35,7 @@ const workoutSchema = new mongoose.Schema({
 
 const Workout = mongoose.model('Workout', workoutSchema);
 
-// ============ CRUD ROUTES ============
+// This is the CRUD ROUTES
 
 // CREATE - Add workout
 app.post('/api/workouts', async (req, res) => {
@@ -81,7 +86,7 @@ app.delete('/api/workouts/:id', async (req, res) => {
     }
 });
 
-// ============ API NINJAS SEARCH ============
+// This is API NINJAS SEARCH 
 app.get('/api/exercises/search', async (req, res) => {
     const query = req.query.name;
     
@@ -107,7 +112,3 @@ app.get('/api/exercises/search', async (req, res) => {
     }
 });
 
-// ============ START SERVER ============
-app.listen(3000, () => {
-    console.log("Server is running on port 3000!");
-});
