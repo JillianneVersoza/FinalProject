@@ -1,11 +1,10 @@
-<!--This is the HTML template for the workout form component. 
-It includes a search section for exercises, a form to log workouts, and a list of logged workouts.-->
-<div class="container">
+﻿<div class="container">
     @if (successMessage()) {
     <div class="success-message">{{ successMessage() }}</div>
     }
 
-    <!-- This is the search section -->
+    <!-- Only show search section when viewMode is 'home' -->
+    @if (viewMode() === 'home') {
     <div class="search-section">
         <h3>Search Exercises from API Ninjas</h3>
         <div class="search-box">
@@ -28,8 +27,9 @@ It includes a search section for exercises, a form to log workouts, and a list o
     </div>
 
     <hr />
+    }
 
-    <!-- This is the form -->
+    <!-- This is the form - always shown -->
     <form [formGroup]="workoutForm" (ngSubmit)="onSubmit()">
         <h3>{{ editingId() ? 'Edit Workout' : 'Log New Workout' }}</h3>
 
@@ -41,11 +41,11 @@ It includes a search section for exercises, a form to log workouts, and a list o
         <div class="form-group">
             <label>Category</label>
             <select formControlName="category">
-                <option value="cardio"> Cardio</option>
-                <option value="strength"> Strength</option>
-                <option value="flexibility"> Flexibility</option>
-                <option value="hiit"> HIIT</option>
-                <option value="other"> Other</option>
+                <option value="cardio">Cardio</option>
+                <option value="strength">Strength</option>
+                <option value="flexibility">Flexibility</option>
+                <option value="hiit">HIIT</option>
+                <option value="other">Other</option>
             </select>
         </div>
 
@@ -57,7 +57,7 @@ It includes a search section for exercises, a form to log workouts, and a list o
         </div>
 
         <div class="form-group">
-            <label> Calories Burned</label>
+            <label>Calories Burned</label>
             <input type="number" formControlName="caloriesBurned" readonly>
         </div>
 
@@ -76,14 +76,15 @@ It includes a search section for exercises, a form to log workouts, and a list o
         </div>
     </form>
 
+    <!-- This is -->
+    @if (viewMode() === 'home') {
     <hr />
 
-    <!-- This is the workout list -->
     <h3>Workout History ({{ workoutService.workoutList().length }})</h3>
 
     @if (workoutService.workoutList().length === 0) {
     <div class="empty-state">
-        <p> No workouts logged yet!</p>
+        <p>No workouts logged yet!</p>
         <p class="hint">Search for exercises above to get started</p>
     </div>
     }
@@ -92,7 +93,7 @@ It includes a search section for exercises, a form to log workouts, and a list o
         @for (w of workoutService.workoutList(); track w._id) {
         <div class="workout-card">
             <div class="card-header">
-                <span class="date">{{ w.date | date:'MMM d, yyyy' }}</span>
+                <span class="date">{{ w.date }}</span>
             </div>
             <div class="card-title">{{ w.exerciseName }}</div>
             <div class="card-stats">
@@ -100,10 +101,10 @@ It includes a search section for exercises, a form to log workouts, and a list o
                 @if (w.reps && w.reps > 0) { <span>{{ w.reps }} reps</span> }
                 @if (w.weight && w.weight > 0) { <span>{{ w.weight }} lbs</span> }
                 <span>{{ w.duration }} min</span>
-                <span> {{ w.caloriesBurned }} cal</span>
+                <span>{{ w.caloriesBurned }} cal</span>
             </div>
             @if (w.notes) {
-            <div class="card-notes"> {{ w.notes }}</div>
+            <div class="card-notes">{{ w.notes }}</div>
             }
             <div class="card-actions">
                 <button (click)="startEdit(w)" class="btn-edit">Edit</button>
@@ -112,4 +113,5 @@ It includes a search section for exercises, a form to log workouts, and a list o
         </div>
         }
     </div>
+    }
 </div>

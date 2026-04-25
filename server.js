@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // START SERVER 
 app.listen(3000, () => {
     console.log("Server is running on port 3000!");
-});    
+});
 
 // this is a workout schema 
 const workoutSchema = new mongoose.Schema({
@@ -64,8 +64,8 @@ app.get('/api/workouts', async (req, res) => {
 app.put('/api/workouts/:id', async (req, res) => {
     try {
         const updatedWorkout = await Workout.findByIdAndUpdate(
-            req.params.id, 
-            req.body, 
+            req.params.id,
+            req.body,
             { new: true }
         );
         res.json(updatedWorkout);
@@ -89,7 +89,7 @@ app.delete('/api/workouts/:id', async (req, res) => {
 // This is API NINJAS SEARCH 
 app.get('/api/exercises/search', async (req, res) => {
     const query = req.query.name;
-    
+
     if (!query) {
         return res.status(400).json({ error: 'Exercise name is required' });
     }

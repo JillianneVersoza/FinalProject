@@ -1,6 +1,155 @@
-<div class="app-header">
-    <h1>FitTrack</h1>
+<nav class="navbar">
+    <div class="navbar-brand">
+        <h1>FitTrack</h1>
+        <p>Track workouts, review history, and stay motivated.</p>
+    </div>
+    <ul class="navbar-menu">
+        <li><button type="button" class="nav-button" [class.active]="currentPage() === 'home'"
+                (click)="selectSection('home')">Home</button></li>
+        <li><button type="button" class="nav-button" [class.active]="currentPage() === 'workouts'"
+                (click)="selectSection('workouts')">Workouts</button></li>
+        <li><button type="button" class="nav-button" [class.active]="currentPage() === 'history'"
+                (click)="selectSection('history')">History</button></li>
+        <li><button type="button" class="nav-button" [class.active]="currentPage() === 'about'"
+                (click)="selectSection('about')">About</button></li>
+    </ul>
+</nav>
+
+<div class="page-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div>
+                <h2>Workout History</h2>
+                <p>Recent logs and progress overview.</p>
+            </div>
+            <span class="history-count">{{ workoutService.workoutList().length }}</span>
+        </div>
+
+        @if (workoutService.workoutList().length === 0) {
+        <div class="empty-state">
+            <p>No workouts logged yet.</p>
+            <p class="hint">Start by logging your first workout in the form.</p>
+        </div>
+        }
+
+        <div class="history-list">
+            @for (w of workoutService.workoutList(); track w._id) {
+            <div class="history-card" [class.selected]="selectedWorkout()?._id === w._id" (click)="selectWorkout(w)">
+                <div class="history-card-title">{{ w.exerciseName }}</div>
+            </div>
+            }
+        </div>
+    </aside>
+
+    <main class="main-panel">
+        <div class="section-panel">
+
+            @if (currentPage() === 'home') {
+            <div class="search-box">
+                <input type="text" [ngModel]="searchQuery" (ngModelChange)="searchHomeExercises($event)"
+                    placeholder="e.g., pushup, squat, bench press" class="search-input">
+                <button (click)="searchHomeExercises(searchQuery)" class="search-btn">Search</button>
+            </div>
+
+            @if (isSearching()) {
+            <p>Searching...</p>
+            }
+
+            @if (errorMessage()) {
+            <div class="error-message">{{ errorMessage() }}</div>
+            }
+
+            @if (searchResults().length > 0) {
+            <div class="results">
+                @for (ex of searchResults(); track ex.name) {
+                <div class="result-card">
+                    <strong>{{ ex.name }}</strong>
+                    <span class="badge">{{ ex.muscle }}</span>
+                    <span class="badge">{{ ex.difficulty }}</span>
+                </div>
+                }
+            </div>
+            }
+            }
+
+            @if (currentPage() === 'workouts') {
+            <div class="workout-panel">
+                <app-workout-form viewMode="workouts"></app-workout-form>
+            </div>
+            }
+
+            @if (currentPage() === 'about') {
+            <div class="section-top">
+                <h2>About</h2>
+                <p>Meet the team behind FitTrack.</p>
+            </div>
+
+            <div class="about-card">
+                <h3>About the Developers</h3>
+                <p>This app was built by a two-person team focused on making workout tracking fast and easy. We designed
+                    the UI to highlight your exercise search, workout logging, and progress history. </p>
+            </div>
+
+            <div class="about-card">
+                <h3>Development Team</h3>
+                <div class="team-list">
+                    <p><strong>Ma. Angelica Tacanay</strong></p>
+                    <p><strong>Jillianne Loïse Versoza</strong></p>
+                </div>
+            </div>
+            }
+
+            @if (currentPage() === 'history') {
+            @if (selectedWorkout()) {
+            <div class="history-details-card">
+                <div class="history-details-header">
+                    <div>
+                        <h3>{{ selectedWorkout()?.exerciseName }}</h3>
+                        <p class="details-subtitle">{{ selectedWorkout()?.category }} &bull; {{ selectedWorkout()?.date
+                            }}</p>
+                    </div>
+                </div>
+
+                <div class="history-details-grid">
+                    <div class="details-row">
+                        <span class="details-label">Sets</span>
+                        <span class="details-value">{{ selectedWorkout()?.sets || 0 }}</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-label">Reps</span>
+                        <span class="details-value">{{ selectedWorkout()?.reps || 0 }}</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-label">Weight</span>
+                        <span class="details-value">{{ selectedWorkout()?.weight || 0 }} lbs</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-label">Duration</span>
+                        <span class="details-value">{{ selectedWorkout()?.duration }} min</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-label">Calories</span>
+                        <span class="details-value">{{ selectedWorkout()?.caloriesBurned }} cal</span>
+                    </div>
+                    <div class="details-row details-notes">
+                        <span class="details-label">Notes</span>
+                        <span class="details-value">{{ selectedWorkout()?.notes || 'No notes added.' }}</span>
+                    </div>
+                </div>
+
+                <div class="history-details-actions">
+                    <button type="button" class="btn-edit" (click)="editSelectedWorkout()">Edit workout</button>
+                    <button type="button" class="btn-delete" (click)="deleteSelectedWorkout()">Delete workout</button>
+                </div>
+            </div>
+            }
+            @if (!selectedWorkout()) {
+            <div class="section-placeholder">
+                <h3>Workout history</h3>
+                <p>Select a workout from the sidebar to view its full details here.</p>
+            </div>
+            }
+            }
+        </div>
+    </main>
 </div>
-
-<app-workout-form />
-

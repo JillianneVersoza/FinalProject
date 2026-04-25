@@ -1,7 +1,6 @@
 // This is the workout service
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
 
 export interface Workout {
     _id?: string;
@@ -26,7 +25,8 @@ export class WorkoutService {
 
     workoutList = signal<Workout[]>([]);
     exerciseResults = signal<any[]>([]);
-    isLoading = signal<boolean>(false);
+    isLoading = signal(false);
+    editingWorkout = signal<Workout | null>(null);
 
     fetchWorkouts(): void {
         this.isLoading.set(true);
@@ -43,19 +43,19 @@ export class WorkoutService {
         });
     }
 
-    searchExercises(query: string): Observable<any[]> {
+    searchExercises(query: string) {
         return this.http.get<any[]>(`${this.exerciseApiUrl}?name=${query}`);
     }
 
-    saveWorkout(data: any): Observable<Workout> {
+    saveWorkout(data: any) {
         return this.http.post<Workout>(this.apiUrl, data);
     }
 
-    updateWorkout(id: string, data: any): Observable<Workout> {
+    updateWorkout(id: string, data: any) {
         return this.http.put<Workout>(`${this.apiUrl}/${id}`, data);
     }
 
-    deleteWorkout(id: string): Observable<void> {
+    deleteWorkout(id: string) {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 }
