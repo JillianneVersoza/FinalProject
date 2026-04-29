@@ -8,8 +8,8 @@
     <div class="search-section">
         <h3>Search Exercises from API Ninjas</h3>
         <div class="search-box">
-            <input type="text" [(ngModel)]="searchQuery" placeholder="e.g., pushup, squat, bench press"
-                class="search-input">
+            <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
+                placeholder="e.g., pushup, squat, bench press" class="search-input" (keyup.enter)="searchExercise()">
             <button (click)="searchExercise()" class="search-btn">Search</button>
         </div>
 
@@ -41,19 +41,26 @@
         <div class="form-group">
             <label>Category</label>
             <select formControlName="category">
-                <option value="cardio">Cardio</option>
-                <option value="strength">Strength</option>
-                <option value="flexibility">Flexibility</option>
-                <option value="hiit">HIIT</option>
-                <option value="other">Other</option>
+                <option value="cardio">🏃 Cardio</option>
+                <option value="strength">💪 Strength</option>
+                <option value="flexibility">🧘 Flexibility</option>
+                <option value="hiit">⚡ HIIT</option>
+                <option value="other">📦 Other</option>
             </select>
         </div>
 
         <div class="form-row">
-            <div class="form-group"><label>Sets</label><input type="number" formControlName="sets"></div>
-            <div class="form-group"><label>Reps</label><input type="number" formControlName="reps"></div>
-            <div class="form-group"><label>Weight (lbs)</label><input type="number" formControlName="weight"></div>
-            <div class="form-group"><label>Duration (min)</label><input type="number" formControlName="duration"></div>
+            <div class="form-group"><label>Sets</label><input type="number" formControlName="sets" min="0"></div>
+            <div class="form-group"><label>Reps</label><input type="number" formControlName="reps" min="0"></div>
+            <div class="form-group"><label>Weight (lbs)</label><input type="number" formControlName="weight" min="0">
+            </div>
+            <div class="form-group"><label>Duration (min)</label><input type="number" formControlName="duration"
+                    min="0"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Date</label>
+            <input type="date" formControlName="date">
         </div>
 
         <div class="form-group">
@@ -68,7 +75,7 @@
 
         <div class="form-actions">
             <button type="submit" [disabled]="workoutForm.invalid" class="btn-primary">
-                {{ editingId() ? 'Update Workout' : 'Log Workout' }}
+                {{ editingId() ? '✏️ Update Workout' : '✅ Log Workout' }}
             </button>
             @if (editingId()) {
             <button type="button" (click)="cancelEdit()" class="btn-secondary">Cancel</button>
@@ -76,7 +83,7 @@
         </div>
     </form>
 
-    <!-- This is -->
+    <!-- This is the workout history shown in home view -->
     @if (viewMode() === 'home') {
     <hr />
 
@@ -93,7 +100,8 @@
         @for (w of workoutService.workoutList(); track w._id) {
         <div class="workout-card">
             <div class="card-header">
-                <span class="date">{{ w.date }}</span>
+                <span class="category-badge" [style.background]="getCategoryColor(w.category)">{{ w.category }}</span>
+                <span class="date">{{ w.date | date:'mediumDate' }}</span>
             </div>
             <div class="card-title">{{ w.exerciseName }}</div>
             <div class="card-stats">

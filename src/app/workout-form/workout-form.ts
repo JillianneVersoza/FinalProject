@@ -32,6 +32,7 @@ export class WorkoutFormComponent implements OnInit {
             weight: [0],
             duration: [30, Validators.required],
             caloriesBurned: [0],
+            date: [new Date().toISOString().split('T')[0]],
             notes: ['']
         });
 
@@ -42,7 +43,7 @@ export class WorkoutFormComponent implements OnInit {
         if (editing && editing._id) {
             this.editingWorkout.set(editing);
             this.editingId.set(editing._id);
-            this.workoutForm.patchValue(editing);
+
         }
 
         this.workoutService.fetchWorkouts();
@@ -74,10 +75,12 @@ export class WorkoutFormComponent implements OnInit {
         if (!workout._id) return;
         this.editingWorkout.set(workout);
         this.editingId.set(workout._id);
-        this.workoutForm.patchValue(workout);
+
     }
 
     deleteWorkout(id: string): void {
+        if (!confirm('Are you sure you want to delete this workout?')) return;
+
         this.workoutService.deleteWorkout(id).subscribe({
             next: () => {
                 this.showMessage('Workout deleted!');
@@ -117,6 +120,7 @@ export class WorkoutFormComponent implements OnInit {
             weight: 0,
             duration: 30,
             caloriesBurned: 0,
+            date: new Date().toISOString().split('T')[0],
             notes: ''
         });
     }
@@ -150,11 +154,23 @@ export class WorkoutFormComponent implements OnInit {
                         weight: 0,
                         duration: 30,
                         caloriesBurned: 0,
+                        date: new Date().toISOString().split('T')[0],
                         notes: ''
                     });
                 }
             });
         }
+    }
+
+    getCategoryColor(category: string): string {
+        const colors: { [key: string]: string } = {
+            'strength': '#ef4444',
+            'cardio': '#3b82f6',
+            'flexibility': '#10b981',
+            'hiit': '#f59e0b',
+            'other': '#8b5cf6'
+        };
+        return colors[category] || '#6b7280';
     }
 
     private showMessage(message: string): void {

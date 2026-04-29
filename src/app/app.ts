@@ -16,10 +16,6 @@ export class App implements OnInit {
     workoutService = inject(WorkoutService);
     currentPage = signal<'home' | 'workouts' | 'history' | 'about'>('home');
     selectedWorkout = signal<Workout | null>(null);
-    searchResults = signal<any[]>([]);
-    isSearching = signal(false);
-    errorMessage = signal<string | null>(null);
-    searchQuery = '';
 
     ngOnInit(): void {
         this.workoutService.fetchWorkouts();
@@ -29,10 +25,6 @@ export class App implements OnInit {
         this.currentPage.set(section);
         if (section !== 'history') {
             this.selectedWorkout.set(null);
-        }
-        if (section !== 'home') {
-            this.searchResults.set([]);
-            this.errorMessage.set(null);
         }
     }
 
@@ -70,33 +62,33 @@ export class App implements OnInit {
         });
     }
 
-    searchHomeExercises(query: string): void {
-        this.searchQuery = query;
-        const trimmed = query.trim();
-        if (!trimmed) {
-            this.searchResults.set([]);
-            return;
-        }
-        this.isSearching.set(true);
-        this.errorMessage.set(null);
 
-        this.workoutService.searchExercises(trimmed).subscribe({
-            next: (data) => {
-                this.searchResults.set(data || []);
-                this.isSearching.set(false);
-            },
-            error: (err) => {
-                console.error(err);
-                this.errorMessage.set('Search error. Make sure the backend is running.');
-                this.isSearching.set(false);
-            }
-        });
+    get totalWorkouts(): number {
+        return this.workoutService.workoutList().length;
+    }
+
+    get totalCaloriesBurned(): number {
+        return this.workoutService.workoutList()
+            .reduce((sum, w) => sum + (w.caloriesBurned || 0), 0);
+    }
+
+    get totalDuration(): number {
+        return this.workoutService.workoutList()
+            .reduce((sum, w) => sum + (w.duration || 0), 0);
+    }
+
+    get averageIntensity(): string {
+        const workouts = this.workoutService.workoutList();
+        if (workouts.length === 0) return '0';
+        const avg = workouts.reduce((sum, w) =>
+            sum + ((w.caloriesBurned || 0) / (w.duration || 1)), 0) / workouts.length;
+        return avg.toFixed(1);
     }
 
     get sectionHeading(): string {
         const page = this.currentPage();
         if (page === 'home') {
-            return 'Search Exercises from API Ninjas';
+            return 'Dashboard';
         }
         if (page === 'workouts') {
             return 'Log a Workout';
@@ -113,7 +105,7 @@ export class App implements OnInit {
     get sectionSubtitle(): string {
         const page = this.currentPage();
         if (page === 'home') {
-            return 'Search exercises from API Ninjas to find your next workout.';
+            return 'Your fitness overview and quick actions.';
         }
         if (page === 'workouts') {
             return 'Use the form below to save your exercise session.';
