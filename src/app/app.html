@@ -22,8 +22,24 @@
                 <h2>Workout History</h2>
                 <p>Recent logs and progress overview.</p>
             </div>
-            <span class="history-count">{{ workoutService.workoutList().length }}</span>
         </div>
+
+        @if (workoutService.workoutList().length > 0) {
+        <div class="sidebar-stats">
+            <div class="sidebar-stat">
+                <span class="sidebar-stat-value">{{ totalWorkouts }}</span>
+                <span class="sidebar-stat-label">Workouts</span>
+            </div>
+            <div class="sidebar-stat">
+                <span class="sidebar-stat-value">{{ totalCaloriesBurned }}</span>
+                <span class="sidebar-stat-label">Calories</span>
+            </div>
+            <div class="sidebar-stat">
+                <span class="sidebar-stat-value">{{ totalDuration }}m</span>
+                <span class="sidebar-stat-label">Minutes</span>
+            </div>
+        </div>
+        }
 
         @if (workoutService.workoutList().length === 0) {
         <div class="empty-state">
@@ -51,39 +67,12 @@
                     }
                     <span>{{ w.duration }}m</span>
                 </div>
-                <div class="history-card-date">{{ w.date | date:'mediumDate' }}</div>
             </div>
             }
         </div>
     </aside>
 
     <main class="main-panel">
-        <!-- Stats Overview -->
-        @if (workoutService.workoutList().length > 0) {
-        <div class="stats-overview">
-            <div class="stat-card">
-                <div class="stat-icon">💪</div>
-                <div class="stat-value">{{ totalWorkouts }}</div>
-                <div class="stat-label">Total Workouts</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🔥</div>
-                <div class="stat-value">{{ totalCaloriesBurned }}</div>
-                <div class="stat-label">Calories Burned</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">⏱️</div>
-                <div class="stat-value">{{ totalDuration }}m</div>
-                <div class="stat-label">Total Minutes</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📊</div>
-                <div class="stat-value">{{ averageIntensity }}</div>
-                <div class="stat-label">Avg cal/min</div>
-            </div>
-        </div>
-        }
-
         <div class="section-panel">
             <div class="section-top">
                 <h2>{{ sectionHeading }}</h2>
@@ -102,52 +91,16 @@
 
             @if (currentPage() === 'about') {
             <div class="about-container">
-                <!-- Hero Section -->
-                <div class="about-hero">
-                    <div class="hero-icon">💪</div>
-                    <h2>About FitTrack</h2>
-                    <p class="hero-subtitle">Your personal fitness companion for tracking progress and crushing goals.
-                    </p>
-                </div>
-
-                <!-- Mission Card -->
                 <div class="about-card mission-card">
                     <div class="card-icon">🎯</div>
-                    <h3>Our Mission</h3>
-                    <p>FitTrack was built with a simple goal: make workout tracking effortless so you can focus on what
-                        matters most — your fitness journey. We combine powerful tracking features with an intuitive
-                        design to help you stay consistent and motivated.</p>
+                    <h3>Why We Built FitTrack</h3>
+                    <p>As students who are also into fitness, we wanted a simple way to log our workouts without the complexity of other apps. FitTrack is our answer — a clean, straightforward workout tracker that helps you focus on your progress, not on figuring out how to use the app.</p>
                 </div>
 
-                <!-- Features Grid -->
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🔍</div>
-                        <h4>Exercise Search</h4>
-                        <p>Access thousands of exercises from the API Ninjas database</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h4>Progress Tracking</h4>
-                        <p>Monitor your stats with visual dashboards and history</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h4>Quick Logging</h4>
-                        <p>Log workouts in seconds with our streamlined form</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📱</div>
-                        <h4>Responsive Design</h4>
-                        <p>Access your workouts on any device, anywhere</p>
-                    </div>
-                </div>
-
-                <!-- Tech Stack -->
                 <div class="about-card tech-card">
                     <h3>🛠️ Built With</h3>
                     <div class="tech-stack">
-                        <span class="tech-badge">Angular 17</span>
+                        <span class="tech-badge">Angular 20</span>
                         <span class="tech-badge">TypeScript</span>
                         <span class="tech-badge">Node.js</span>
                         <span class="tech-badge">Express</span>
@@ -157,36 +110,35 @@
                     </div>
                 </div>
 
-                <!-- Team Section -->
                 <div class="about-card team-card">
                     <h3>👥 Meet the Team</h3>
-                    <p class="team-intro">Built by passionate developers committed to making fitness tracking accessible
-                        to everyone.</p>
+                    <p class="team-intro">Two IT students who wanted to build something useful for our final project.</p>
 
                     <div class="team-members">
                         <div class="member-card">
-                            <div class="member-avatar">👩‍💻</div>
+                            <div class="member-avatar">
+                                <img src="images/TACANAY_MA_ANGELICA.png" alt="Ma. Angelica Tacanay" class="avatar-img">
+                            </div>
                             <div class="member-info">
                                 <h4>Ma. Angelica Tacanay</h4>
-                                <span class="member">2nd year IT Student</span>
-                                <p class="member-bio">Focused on creating seamless user experiences and robust backend
-                                    systems.</p>
+                                <span class="member-role">2nd Year IT Student</span>
+                                <p class="member-bio">Handled the frontend design and user experience of the app.</p>
                             </div>
                         </div>
 
                         <div class="member-card">
-                            <div class="member-avatar">👩‍💻</div>
+                            <div class="member-avatar">
+                                <img src="images/VERSOZA_JILLIANNE.png" alt="Jillianne Louise Versoza" class="avatar-img">
+                            </div>
                             <div class="member-info">
                                 <h4>Jillianne Louise Versoza</h4>
-                                <span class="member">2nd year IT Student</span>
-                                <p class="member-bio">Dedicated to building intuitive interfaces and efficient data
-                                    management.</p>
+                                <span class="member-role">2nd Year IT Student</span>
+                                <p class="member-bio">Worked on the backend and database integration.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Version Info -->
                 <div class="about-card version-card">
                     <h3>📌 App Info</h3>
                     <div class="version-info">
@@ -198,7 +150,6 @@
                             <span class="info-label">Released</span>
                             <span class="info-value">2026</span>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -210,8 +161,7 @@
                 <div class="history-details-header">
                     <div>
                         <h3>{{ selectedWorkout()?.exerciseName }}</h3>
-                        <p class="details-subtitle">{{ selectedWorkout()?.category }} &bull; {{ selectedWorkout()?.date
-                            | date:'mediumDate' }}</p>
+                        <p class="details-subtitle">{{ selectedWorkout()?.category }} &bull; {{ selectedWorkout()?.date | date:'mediumDate' }}</p>
                     </div>
                     <span class="category-badge">{{ selectedWorkout()?.category }}</span>
                 </div>
@@ -245,7 +195,7 @@
 
                 <div class="history-details-actions">
                     <button type="button" class="btn-edit" (click)="editSelectedWorkout()">Edit workout</button>
-                    <button type="button" class="btn-delete" (click)="deleteSelectedWorkout()">Delete workout</button>
+                    <button type="button" class="btn-delete" (click)="deleteSelectedWorkout()">Delete workout</button>  
                 </div>
             </div>
             }

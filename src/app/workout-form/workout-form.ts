@@ -1,12 +1,11 @@
 import { Component, OnInit, inject, signal, input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { WorkoutService, Workout } from '../services/workout';
 
 @Component({
     selector: 'app-workout-form',
     standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, FormsModule],
+    imports: [ReactiveFormsModule , FormsModule],
     templateUrl: './workout-form.html',
     styleUrls: ['./workout-form.css']
 })

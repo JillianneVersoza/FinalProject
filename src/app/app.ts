@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WorkoutFormComponent } from './workout-form/workout-form';
 import { WorkoutService, Workout } from './services/workout';
@@ -7,7 +7,7 @@ import { WorkoutService, Workout } from './services/workout';
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [CommonModule, FormsModule, WorkoutFormComponent],
+    imports: [CommonModule, FormsModule, WorkoutFormComponent, DatePipe],
     templateUrl: './app.html',
     styleUrls: ['./app.css']
 })
