@@ -161,7 +161,7 @@
                 <div class="history-details-header">
                     <div>
                         <h3>{{ selectedWorkout()?.exerciseName }}</h3>
-                        <p class="details-subtitle">{{ selectedWorkout()?.category }} &bull; {{ selectedWorkout()?.date | date:'mediumDate' }}</p>
+                        <p class="details-subtitle">{{ selectedWorkout()?.date | date:'mediumDate' }}</p>
                     </div>
                     <span class="category-badge">{{ selectedWorkout()?.category }}</span>
                 </div>
@@ -195,7 +195,7 @@
 
                 <div class="history-details-actions">
                     <button type="button" class="btn-edit" (click)="editSelectedWorkout()">Edit workout</button>
-                    <button type="button" class="btn-delete" (click)="deleteSelectedWorkout()">Delete workout</button>  
+                    <button type="button" class="btn-delete" (click)="deleteSelectedWorkout()">Delete workout</button>
                 </div>
             </div>
             }

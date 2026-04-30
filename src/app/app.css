@@ -15,7 +15,7 @@
     color: #ffffff;
     box-shadow: 0 15px 30px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
+    border-radius: 8px;
     margin: 1rem 2rem 0;
 }
 
@@ -43,7 +43,7 @@
     padding: 0.8rem 1.25rem;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: 4px;
     color: #e2e8f0;
     font-weight: 600;
     cursor: pointer;
@@ -78,7 +78,7 @@
     margin-bottom: 1rem;
     padding: 0.75rem;
     background: #f8fafc;
-    border-radius: 14px;
+    border-radius: 4px;
     border: 1px solid #e2e8f0;
 }
 
@@ -89,8 +89,8 @@
 .sidebar-stat-value {
     display: block;
     font-weight: 700;
-    font-size: 0.8rem;
-    color: #1e293b;
+    font-size: 1rem;
+    color: #2563eb;
 }
 
 .sidebar-stat-label {
@@ -98,6 +98,8 @@
     font-size: 0.65rem;
     color: #94a3b8;
     margin-top: 0.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 /* Category Badge */
@@ -106,7 +108,7 @@
     padding: 0.4rem 1rem;
     background: #e0f2fe;
     color: #0369a1;
-    border-radius: 999px;
+    border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
 }
@@ -123,17 +125,12 @@
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
-    border-radius: 18px;
+    border-radius: 4px;
 }
 
 @keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 /* About Section */
@@ -144,7 +141,7 @@
 .about-card {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
+    border-radius: 4px;
     padding: 1.25rem;
     margin-bottom: 0.75rem;
 }
@@ -187,7 +184,7 @@
     padding: 0.35rem 0.75rem;
     background: white;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
+    border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 600;
     color: #475569;
@@ -225,7 +222,7 @@
     text-align: center;
     background: white;
     padding: 1.25rem;
-    border-radius: 16px;
+    border-radius: 4px;
     border: 1px solid #e2e8f0;
     transition: all 0.3s ease;
 }
@@ -239,7 +236,7 @@
 .member-avatar {
     width: 80px;
     height: 80px;
-    border-radius: 50%;
+    border-radius: 4px;
     overflow: hidden;
     margin-bottom: 0.75rem;
     border: 3px solid #fef3c7;
@@ -262,7 +259,7 @@
     background: #fef3c7;
     color: #92400e;
     padding: 0.2rem 0.6rem;
-    border-radius: 16px;
+    border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -307,7 +304,7 @@
 .sidebar,
 .main-panel {
     background: #ffffff;
-    border-radius: 24px;
+    border-radius: 8px;
     box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
     overflow: hidden;
 }
@@ -336,18 +333,6 @@
     line-height: 1.55;
 }
 
-.history-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 3rem;
-    padding: 0.5rem 0.85rem;
-    background: #e0f2fe;
-    color: #0369a1;
-    border-radius: 999px;
-    font-weight: 700;
-}
-
 .history-list {
     display: grid;
     gap: 1rem;
@@ -355,7 +340,7 @@
 
 .history-card {
     border: 1px solid #e2e8f0;
-    border-radius: 18px;
+    border-radius: 4px;
     padding: 1rem 1.15rem;
     background: #f8fbff;
     cursor: pointer;
@@ -375,7 +360,7 @@
 .history-details-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 24px;
+    border-radius: 8px;
     padding: 1.75rem;
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
@@ -418,7 +403,7 @@
 .history-details-actions .btn-delete {
     min-width: 135px;
     border: none;
-    border-radius: 40px;
+    border-radius: 4px;
     font-weight: 600;
     padding: 0.9rem 1.15rem;
     cursor: pointer;
@@ -449,7 +434,7 @@
     align-items: center;
     padding: 1rem 1.1rem;
     background: #f8fafc;
-    border-radius: 16px;
+    border-radius: 4px;
 }
 
 .details-label {
@@ -495,12 +480,12 @@
     align-items: center;
     padding: 0.4rem 0.75rem;
     background: #eef2ff;
-    border-radius: 999px;
+    border-radius: 4px;
 }
 
 .empty-state {
     padding: 1.25rem;
-    border-radius: 18px;
+    border-radius: 4px;
     background: #f1f5f9;
     color: #475569;
     text-align: center;
@@ -537,7 +522,7 @@
 .section-placeholder {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 1.5rem;
     color: #334155;
 }
@@ -551,7 +536,6 @@
         opacity: 0;
         transform: translateY(14px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -582,7 +566,7 @@
         flex-direction: column;
         gap: 1rem;
         margin: 0.5rem 1rem;
-        border-radius: 20px;
+        border-radius: 8px;
         padding: 1rem;
     }
 
