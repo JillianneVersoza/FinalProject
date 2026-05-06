@@ -1,23 +1,21 @@
-import { Component, OnInit, inject, signal, input } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { WorkoutService, Workout } from '../services/workout';
 
 @Component({
     selector: 'app-workout-form',
     standalone: true,
-    imports: [ReactiveFormsModule , FormsModule],
+    imports: [ReactiveFormsModule, FormsModule, CommonModule],
     templateUrl: './workout-form.html',
     styleUrls: ['./workout-form.css']
 })
 export class WorkoutFormComponent implements OnInit {
-    viewMode = input<string>('workouts');
-
     workoutForm!: FormGroup;
-    editingWorkout = signal<Workout | null>(null);
-    successMessage = signal<string | null>(null);
-    searchQuery = signal<string>('');
-    showResults = signal<boolean>(false);
     editingId = signal<string | null>(null);
+    successMessage = signal<string | null>(null);
+    searchQuery: string = '';
+    showResults = signal<boolean>(false);
 
     private formBuilder = inject(FormBuilder);
     workoutService = inject(WorkoutService);
@@ -31,31 +29,27 @@ export class WorkoutFormComponent implements OnInit {
             weight: [0],
             duration: [30, Validators.required],
             caloriesBurned: [0],
-            date: [new Date().toISOString().split('T')[0]],
             notes: ['']
         });
 
         this.workoutForm.get('duration')?.valueChanges.subscribe(() => this.calculateCalories());
         this.workoutForm.get('category')?.valueChanges.subscribe(() => this.calculateCalories());
 
-        const editing = this.workoutService.editingWorkout();
-        if (editing && editing._id) {
-            this.editingWorkout.set(editing);
-            this.editingId.set(editing._id);
-
-        }
-
         this.workoutService.fetchWorkouts();
     }
 
     searchExercise(): void {
-        const query = this.searchQuery().trim();
+        const query = this.searchQuery.trim();
         if (!query) return;
 
-        this.showResults.set(true);
         this.workoutService.searchExercises(query).subscribe({
             next: (data) => {
                 this.workoutService.exerciseResults.set(data || []);
+                this.showResults.set(true);
+            },
+            error: (err) => {
+                console.error('Search error:', err);
+                alert('Error searching exercises. Make sure backend is running.');
             }
         });
     }
@@ -66,25 +60,37 @@ export class WorkoutFormComponent implements OnInit {
             category: exercise.type || 'strength'
         });
         this.showResults.set(false);
-        this.searchQuery.set('');
+        this.searchQuery = '';
         this.workoutService.exerciseResults.set([]);
     }
 
-    startEdit(workout: Workout): void {
-        if (!workout._id) return;
-        this.editingWorkout.set(workout);
-        this.editingId.set(workout._id);
-
+    deleteWorkout(id: string): void {
+        if (confirm('Are you sure you want to delete this workout?')) {
+            this.workoutService.deleteWorkout(id).subscribe({
+                next: () => {
+                    this.showMessage('Workout deleted!');
+                    this.workoutService.fetchWorkouts();
+                }
+            });
+        }
     }
 
-    deleteWorkout(id: string): void {
-        if (!confirm('Are you sure you want to delete this workout?')) return;
+    startEdit(workout: Workout): void {
+        this.editingId.set(workout._id!);
+        this.workoutForm.patchValue(workout);
+    }
 
-        this.workoutService.deleteWorkout(id).subscribe({
-            next: () => {
-                this.showMessage('Workout deleted!');
-                this.workoutService.fetchWorkouts();
-            }
+    cancelEdit(): void {
+        this.editingId.set(null);
+        this.workoutForm.reset({
+            exerciseName: '',
+            category: 'strength',
+            sets: 3,
+            reps: 10,
+            weight: 0,
+            duration: 30,
+            caloriesBurned: 0,
+            notes: ''
         });
     }
 
@@ -107,43 +113,25 @@ export class WorkoutFormComponent implements OnInit {
         this.workoutForm.patchValue({ caloriesBurned: estimatedCalories }, { emitEvent: false });
     }
 
-    cancelEdit(): void {
-        this.editingWorkout.set(null);
-        this.editingId.set(null);
-        this.workoutService.editingWorkout.set(null);
-        this.workoutForm.reset({
-            exerciseName: '',
-            category: 'strength',
-            sets: 3,
-            reps: 10,
-            weight: 0,
-            duration: 30,
-            caloriesBurned: 0,
-            date: new Date().toISOString().split('T')[0],
-            notes: ''
-        });
-    }
-
     onSubmit(): void {
-        if (this.workoutForm.invalid) {
-            return;
-        }
-
+        if (this.workoutForm.invalid) return;
+        
         const data = this.workoutForm.getRawValue();
         const id = this.editingId();
-
+        
         if (id) {
             this.workoutService.updateWorkout(id, data).subscribe({
                 next: () => {
                     this.showMessage('Workout updated!');
                     this.workoutService.fetchWorkouts();
                     this.cancelEdit();
-                }
+                },
+                error: (err) => console.error('Update failed:', err)
             });
         } else {
             this.workoutService.saveWorkout(data).subscribe({
                 next: () => {
-                    this.showMessage('Workout logged!');
+                    this.showMessage('Workout logged! 💪');
                     this.workoutService.fetchWorkouts();
                     this.workoutForm.reset({
                         exerciseName: '',
@@ -153,23 +141,12 @@ export class WorkoutFormComponent implements OnInit {
                         weight: 0,
                         duration: 30,
                         caloriesBurned: 0,
-                        date: new Date().toISOString().split('T')[0],
                         notes: ''
                     });
-                }
+                },
+                error: (err) => console.error('Save failed:', err)
             });
         }
-    }
-
-    getCategoryColor(category: string): string {
-        const colors: { [key: string]: string } = {
-            'strength': '#ef4444',
-            'cardio': '#3b82f6',
-            'flexibility': '#10b981',
-            'hiit': '#f59e0b',
-            'other': '#8b5cf6'
-        };
-        return colors[category] || '#6b7280';
     }
 
     private showMessage(message: string): void {

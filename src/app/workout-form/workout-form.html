@@ -1,36 +1,35 @@
 ﻿<div class="container">
     @if (successMessage()) {
-    <div class="success-message">{{ successMessage() }}</div>
+        <div class="success-message">{{ successMessage() }}</div>
     }
 
-    @if (viewMode() === 'home') {
+    <!-- Search Section -->
     <div class="search-section">
-        <h3>Search Exercises from API Ninjas</h3>
+        <h3>🔍 Search Exercises from API Ninjas</h3>
         <div class="search-box">
-            <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" 
-                placeholder="e.g., pushup, squat, bench press"
-                class="search-input"
-                (keyup.enter)="searchExercise()">
+            <input type="text" [(ngModel)]="searchQuery" placeholder="e.g., pushup, squat, bench press" class="search-input">
             <button (click)="searchExercise()" class="search-btn">Search</button>
         </div>
 
         @if (showResults()) {
-        <div class="results">
-            @for (ex of workoutService.exerciseResults(); track ex.name) {
-            <div class="result-card" (click)="selectExercise(ex)">
-                <strong>{{ ex.name }}</strong>
-                <span class="badge">{{ ex.muscle }}</span>
-                <span class="badge">{{ ex.difficulty }}</span>
+            <div class="results">
+                @for (exercise of workoutService.exerciseResults(); track exercise.name) {
+                    <div class="result-card" (click)="selectExercise(exercise)">
+                        <strong>{{ exercise.name }}</strong>
+                        <span class="badge">{{ exercise.muscle }}</span>
+                        <span class="badge">{{ exercise.difficulty }}</span>
+                    </div>
+                }
             </div>
-            }
-        </div>
         }
     </div>
-    }
 
     @if (viewMode() === 'workouts') {
+    <hr />
+
+    <!-- Form -->
     <form [formGroup]="workoutForm" (ngSubmit)="onSubmit()">
-        <h3>{{ editingId() ? 'Edit Workout' : 'Log New Workout' }}</h3>
+        <h3>{{ editingId() ? '✏️ Edit Workout' : '📝 Log New Workout' }}</h3>
 
         <div class="form-group">
             <label>Exercise Name *</label>
@@ -40,28 +39,23 @@
         <div class="form-group">
             <label>Category</label>
             <select formControlName="category">
-                <option value="cardio">Cardio</option>
-                <option value="strength">Strength</option>
-                <option value="flexibility">Flexibility</option>
-                <option value="hiit">HIIT</option>
-                <option value="other">Other</option>
+                <option value="cardio"> Cardio</option>
+                <option value="strength"> Strength</option>
+                <option value="flexibility"> Flexibility</option>
+                <option value="hiit"> HIIT</option>
+                <option value="other"> Other</option>
             </select>
         </div>
 
         <div class="form-row">
-            <div class="form-group"><label>Sets</label><input type="number" formControlName="sets" min="0"></div>
-            <div class="form-group"><label>Reps</label><input type="number" formControlName="reps" min="0"></div>
-            <div class="form-group"><label>Weight (lbs)</label><input type="number" formControlName="weight" min="0"></div>
-            <div class="form-group"><label>Duration (min)</label><input type="number" formControlName="duration" min="0"></div>
+            <div class="form-group"><label>Sets</label><input type="number" formControlName="sets"></div>
+            <div class="form-group"><label>Reps</label><input type="number" formControlName="reps"></div>
+            <div class="form-group"><label>Weight (lbs)</label><input type="number" formControlName="weight"></div>
+            <div class="form-group"><label>Duration (min)</label><input type="number" formControlName="duration"></div>
         </div>
 
         <div class="form-group">
-            <label>Date</label>
-            <input type="date" formControlName="date">
-        </div>
-
-        <div class="form-group">
-            <label>Calories Burned</label>
+            <label> Calories Burned</label>
             <input type="number" formControlName="caloriesBurned" readonly>
         </div>
 
@@ -75,9 +69,46 @@
                 {{ editingId() ? 'Update Workout' : 'Log Workout' }}
             </button>
             @if (editingId()) {
-            <button type="button" (click)="cancelEdit()" class="btn-secondary">Cancel</button>
+                <button type="button" (click)="cancelEdit()" class="btn-secondary">Cancel</button>
             }
         </div>
     </form>
+
+    <hr />
+
+    <!-- Workout List -->
+    <h3>📋 Workout History ({{ workoutService.workoutList().length }})</h3>
+
+    @if (workoutService.workoutList().length === 0) {
+        <div class="empty-state">
+            <p>🏋️ No workouts logged yet!</p>
+            <p class="hint">Search for exercises above to get started</p>
+        </div>
+    }
+
+    <div class="workout-grid">
+        @for (workout of workoutService.workoutList(); track workout._id) {
+            <div class="workout-card">
+                <div class="card-header">
+                    <span class="date">{{ workout.date | date:'MMM d, yyyy' }}</span>
+                </div>
+                <div class="card-title">{{ workout.exerciseName }}</div>
+                <div class="card-stats">
+                    @if (workout.sets && workout.sets > 0) { <span>{{ workout.sets }} sets</span> }
+                    @if (workout.reps && workout.reps > 0) { <span>{{ workout.reps }} reps</span> }
+                    @if (workout.weight && workout.weight > 0) { <span>{{ workout.weight }} lbs</span> }
+                    <span>{{ workout.duration }} min</span>
+                    <span> {{ workout.caloriesBurned }} cal</span>
+                </div>
+                @if (workout.notes) {
+                    <div class="card-notes">📝 {{ workout.notes }}</div>
+                }
+                <div class="card-actions">
+                    <button (click)="startEdit(workout)" class="btn-edit">Edit</button>
+                    <button (click)="deleteWorkout(workout._id!)" class="btn-delete">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
     }
 </div>
