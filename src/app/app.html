@@ -36,7 +36,6 @@
                 <span class="sidebar-stat-value">{{ totalDuration }}m</span>
                 <span class="sidebar-stat-label">Minutes</span>
             </div>
-            
         </div>
         }
 
@@ -78,18 +77,21 @@
                 <p>{{ sectionSubtitle }}</p>
             </div>
 
+            <!-- WORKOUTS PAGE -->
             @if (currentPage() === 'workouts') {
             <div class="workout-panel">
                 <app-workout-form viewMode="workouts"></app-workout-form>
             </div>
             }
 
+            <!-- ABOUT PAGE -->
             @if (currentPage() === 'about') {
             <div class="about-container">
                 <div class="about-card mission-card">
                     <div class="card-icon">🎯</div>
                     <h3>Why We Built FitTrack</h3>
-                    <p>We built FitTrack to make it easy for students and fitness enthusiasts to log their workouts and track their progress without the hassle of complex apps.</p>
+                    <p>We built FitTrack to make it easy for students and fitness enthusiasts to log their workouts and
+                        track their progress without the hassle of complex apps.</p>
                 </div>
 
                 <div class="about-card tech-card">
@@ -107,7 +109,8 @@
 
                 <div class="about-card team-card">
                     <h3>👥 Meet the Team</h3>
-                    <p class="team-intro">Two IT students who wanted to build something useful for our final project.</p>
+                    <p class="team-intro">Two IT students who wanted to build something useful for our final project.
+                    </p>
 
                     <div class="team-members">
                         <div class="member-card">
@@ -122,7 +125,8 @@
 
                         <div class="member-card">
                             <div class="member-avatar">
-                                <img src="images/VERSOZA_JILLIANNE.png" alt="Jillianne Louise Versoza" class="avatar-img">
+                                <img src="images/VERSOZA_JILLIANNE.png" alt="Jillianne Louise Versoza"
+                                    class="avatar-img">
                             </div>
                             <div class="member-info">
                                 <h4>Jillianne Louise Versoza</h4>
@@ -148,8 +152,11 @@
             </div>
             }
 
+            <!-- HISTORY PAGE -->
             @if (currentPage() === 'history') {
             @if (selectedWorkout()) {
+            @if (!isEditing()) {
+            <!-- View Mode -->
             <div class="history-details-card">
                 <div class="history-details-header">
                     <div>
@@ -187,10 +194,61 @@
                 </div>
 
                 <div class="history-details-actions">
-                    <button type="button" class="btn-edit" (click)="editSelectedWorkout()">Edit workout</button>
+                    <button type="button" class="btn-edit" (click)="startInlineEdit()">Edit workout</button>
                     <button type="button" class="btn-delete" (click)="deleteSelectedWorkout()">Delete workout</button>
                 </div>
             </div>
+            } @else {
+            <!-- Edit Mode -->
+            <div class="edit-details-card">
+                <h3>✏️ Editing: {{ editForm.exerciseName }}</h3>
+
+                <div class="form-group">
+                    <label>Exercise Name</label>
+                    <input type="text" [(ngModel)]="editForm.exerciseName" class="edit-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select [(ngModel)]="editForm.category" class="edit-input">
+                        <option value="cardio">Cardio</option>
+                        <option value="strength">Strength</option>
+                        <option value="flexibility">Flexibility</option>
+                        <option value="hiit">HIIT</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Sets</label>
+                        <input type="number" [(ngModel)]="editForm.sets" class="edit-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Reps</label>
+                        <input type="number" [(ngModel)]="editForm.reps" class="edit-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (lbs)</label>
+                        <input type="number" [(ngModel)]="editForm.weight" class="edit-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (min)</label>
+                        <input type="number" [(ngModel)]="editForm.duration" class="edit-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea [(ngModel)]="editForm.notes" rows="2" class="edit-input"></textarea>
+                </div>
+
+                <div class="edit-actions">
+                    <button class="save-btn" (click)="saveInlineEdit()">💾 Save Changes</button>
+                    <button class="cancel-btn" (click)="cancelInlineEdit()">❌ Cancel</button>
+                </div>
+            </div>
+            }
             }
             @if (!selectedWorkout()) {
             <div class="section-placeholder">

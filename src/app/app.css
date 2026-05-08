@@ -12,12 +12,32 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.15rem 2rem;
-    background: #0f172a;
+    background: url('/images/gym_bg.avif') no-repeat center center;
+    background-size: cover;
     color: #ffffff;
     box-shadow: 0 15px 30px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     margin: 1rem 2rem 0;
+    position: relative;
+}
+
+.navbar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    z-index: 0;
+}
+
+.navbar>* {
+    position: relative;
+    z-index: 1;
+    font-weight: bold;
 }
 
 .navbar-brand h1 {
@@ -112,26 +132,6 @@
     border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
-}
-
-/* Loading Shimmer */
-.loading-shimmer {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.shimmer-card {
-    height: 80px;
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 4px;
-}
-
-@keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
 }
 
 /* About Section */
@@ -530,6 +530,7 @@
         opacity: 0;
         transform: translateY(14px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -544,6 +545,71 @@
 .section-placeholder p {
     margin: 0;
     line-height: 1.7;
+}
+
+/* ========== EDIT CARD STYLES (ADDED) ========== */
+.edit-details-card {
+    background: #ffffff;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    padding: 1.75rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+.edit-details-card h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #3b82f6;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.edit-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.save-btn {
+    flex: 1;
+    padding: 12px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #2563eb;
+}
+
+.cancel-btn {
+    flex: 1;
+    padding: 12px;
+    background: #e2e8f0;
+    color: #475569;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background: #cbd5e1;
 }
 
 /* Responsive */

@@ -7,7 +7,7 @@ export interface Workout {
     exerciseName: string;
     category: string;
     sets?: number;
-    reps?: number;a
+    reps?: number;
     weight?: number;
     duration?: number;
     caloriesBurned?: number;
@@ -27,7 +27,6 @@ export class WorkoutService {
     exerciseResults = signal<any[]>([]);
     isLoading = signal(false);
     editingWorkout = signal<Workout | null>(null);
-    selectedExercise = signal<any>(null);
 
     fetchWorkouts(): void {
         this.isLoading.set(true);

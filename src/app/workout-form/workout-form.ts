@@ -43,33 +43,27 @@ export class WorkoutFormComponent implements OnInit {
     // ============ API SEARCH ============
     searchExercise(): void {
         const query = this.searchQuery.trim();
-        console.log('1. Search clicked. Query:', query);
-        
         if (!query) {
             alert('Please enter an exercise name');
             return;
         }
 
-        console.log('2. Calling API...');
         this.workoutService.searchExercises(query).subscribe({
             next: (data) => {
-                console.log('3. API Response:', data);
                 this.workoutService.exerciseResults.set(data || []);
                 this.showResults.set(true);
-                
                 if (!data || data.length === 0) {
                     alert('No exercises found. Try "pushup" or "squat"');
                 }
             },
             error: (err) => {
-                console.error('4. API Error:', err);
+                console.error('API Error:', err);
                 alert('Error: Make sure backend is running on port 3000');
             }
         });
     }
 
     selectExercise(exercise: any): void {
-        console.log('Selected exercise:', exercise);
         this.workoutForm.patchValue({
             exerciseName: exercise.name,
             category: exercise.type || 'strength'
@@ -79,38 +73,7 @@ export class WorkoutFormComponent implements OnInit {
         this.workoutService.exerciseResults.set([]);
     }
 
-    // ============ CRUD OPERATIONS ============
-    deleteWorkout(id: string): void {
-        if (confirm('Are you sure you want to delete this workout?')) {
-            this.workoutService.deleteWorkout(id).subscribe({
-                next: () => {
-                    this.showMessage('Workout deleted!');
-                    this.workoutService.fetchWorkouts();
-                },
-                error: (err) => console.error('Delete failed:', err)
-            });
-        }
-    }
-
-    startEdit(workout: Workout): void {
-        this.editingId.set(workout._id!);
-        this.workoutForm.patchValue(workout);
-    }
-
-    cancelEdit(): void {
-        this.editingId.set(null);
-        this.workoutForm.reset({
-            exerciseName: '',
-            category: 'strength',
-            sets: 3,
-            reps: 10,
-            weight: 0,
-            duration: 30,
-            caloriesBurned: 0,
-            notes: ''
-        });
-    }
-
+    // ============ FORM FUNCTIONS ============
     calculateCalories(): void {
         const duration = this.workoutForm.get('duration')?.value || 0;
         const category = this.workoutForm.get('category')?.value;
@@ -130,46 +93,55 @@ export class WorkoutFormComponent implements OnInit {
         this.workoutForm.patchValue({ caloriesBurned: estimatedCalories }, { emitEvent: false });
     }
 
+    cancelEdit(): void {
+        this.editingId.set(null);
+        this.workoutForm.reset({
+            exerciseName: '',
+            category: 'strength',
+            sets: 3,
+            reps: 10,
+            weight: 0,
+            duration: 30,
+            caloriesBurned: 0,
+            notes: ''
+        });
+    }
+
     onSubmit(): void {
-    console.log('Submit clicked');  // Add this debug
-    if (this.workoutForm.invalid) {
-        console.log('Form is invalid', this.workoutForm.errors);
-        return;
+        if (this.workoutForm.invalid) return;
+
+        const data = this.workoutForm.getRawValue();
+        const id = this.editingId();
+
+        if (id) {
+            this.workoutService.updateWorkout(id, data).subscribe({
+                next: () => {
+                    this.showMessage('Workout updated!');
+                    this.workoutService.fetchWorkouts();
+                    this.cancelEdit();
+                },
+                error: (err) => console.error('Update failed:', err)
+            });
+        } else {
+            this.workoutService.saveWorkout(data).subscribe({
+                next: () => {
+                    this.showMessage('Workout logged! 💪');
+                    this.workoutService.fetchWorkouts();
+                    this.workoutForm.reset({
+                        exerciseName: '',
+                        category: 'strength',
+                        sets: 3,
+                        reps: 10,
+                        weight: 0,
+                        duration: 30,
+                        caloriesBurned: 0,
+                        notes: ''
+                    });
+                },
+                error: (err) => console.error('Save failed:', err)
+            });
+        }
     }
-    
-    const data = this.workoutForm.getRawValue();
-    console.log('Data to save:', data);
-    const id = this.editingId();
-    
-    if (id) {
-        this.workoutService.updateWorkout(id, data).subscribe({
-            next: () => {
-                this.showMessage('Workout updated!');
-                this.workoutService.fetchWorkouts();
-                this.cancelEdit();
-            },
-            error: (err) => console.error('Update failed:', err)
-        });
-    } else {
-        this.workoutService.saveWorkout(data).subscribe({
-            next: () => {
-                this.showMessage('Workout logged! 💪');
-                this.workoutService.fetchWorkouts();
-                this.workoutForm.reset({
-                    exerciseName: '',
-                    category: 'strength',
-                    sets: 3,
-                    reps: 10,
-                    weight: 0,
-                    duration: 30,
-                    caloriesBurned: 0,
-                    notes: ''
-                });
-            },
-            error: (err) => console.error('Save failed:', err)
-        });
-    }
-}
 
     private showMessage(message: string): void {
         this.successMessage.set(message);
