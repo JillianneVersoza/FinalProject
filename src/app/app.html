@@ -55,15 +55,15 @@
         }
 
         <div class="history-list">
-            @for (w of workoutService.workoutList(); track w._id) {
-            <div class="history-card" [class.selected]="selectedWorkout()?._id === w._id" (click)="selectWorkout(w)">
-                <div class="history-card-title">{{ w.exerciseName }}</div>
+            @for (workout of workoutService.workoutList(); track workout._id) {
+            <div class="history-card" [class.selected]="selectedWorkout()?._id === workout._id" (click)="selectWorkout(workout)">
+                <div class="history-card-title">{{ workout.exerciseName }}</div>
                 <div class="history-card-meta">
-                    <span>{{ w.category }}</span>
-                    @if (w.sets && w.reps) {
-                    <span>{{ w.sets }}x{{ w.reps }}</span>
+                    <span>{{ workout.category }}</span>
+                    @if (workout.sets && workout.reps) {
+                    <span>{{ workout.sets }}x{{ workout.reps }}</span>
                     }
-                    <span>{{ w.duration }}m</span>
+                    <span>{{ workout.duration }}m</span>
                 </div>
             </div>
             }
