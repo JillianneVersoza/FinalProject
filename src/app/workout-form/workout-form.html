@@ -73,42 +73,5 @@
             }
         </div>
     </form>
-
-    <hr />
-
-    <!-- Workout List -->
-    <h3>📋 Workout History ({{ workoutService.workoutList().length }})</h3>
-
-    @if (workoutService.workoutList().length === 0) {
-        <div class="empty-state">
-            <p>🏋️ No workouts logged yet!</p>
-            <p class="hint">Search for exercises above to get started</p>
-        </div>
-    }
-
-    <div class="workout-grid">
-        @for (workout of workoutService.workoutList(); track workout._id) {
-            <div class="workout-card">
-                <div class="card-header">
-                    <span class="date">{{ workout.date | date:'MMM d, yyyy' }}</span>
-                </div>
-                <div class="card-title">{{ workout.exerciseName }}</div>
-                <div class="card-stats">
-                    @if (workout.sets && workout.sets > 0) { <span>{{ workout.sets }} sets</span> }
-                    @if (workout.reps && workout.reps > 0) { <span>{{ workout.reps }} reps</span> }
-                    @if (workout.weight && workout.weight > 0) { <span>{{ workout.weight }} lbs</span> }
-                    <span>{{ workout.duration }} min</span>
-                    <span> {{ workout.caloriesBurned }} cal</span>
-                </div>
-                @if (workout.notes) {
-                    <div class="card-notes">📝 {{ workout.notes }}</div>
-                }
-                <div class="card-actions">
-                    <button (click)="startEdit(workout)" class="btn-edit">Edit</button>
-                    <button (click)="deleteWorkout(workout._id!)" class="btn-delete">Delete</button>
-                </div>
-            </div>
-        }
-    </div>
     }
 </div>

@@ -7,7 +7,7 @@ export interface Workout {
     exerciseName: string;
     category: string;
     sets?: number;
-    reps?: number;
+    reps?: number;a
     weight?: number;
     duration?: number;
     caloriesBurned?: number;

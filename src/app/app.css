@@ -2,7 +2,8 @@
     display: block;
     min-height: 100vh;
     font-family: 'Inter', system-ui, sans-serif;
-    background: #eef3fb;
+    background: url('/images/gym_bg.avif') no-repeat center center fixed;
+    background-size: cover;
     color: #1f2937;
 }
 

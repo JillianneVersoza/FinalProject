@@ -4,8 +4,6 @@
         <p>Track workouts, review history, and stay motivated.</p>
     </div>
     <ul class="navbar-menu">
-        <li><button type="button" class="nav-button" [class.active]="currentPage() === 'home'"
-                (click)="selectSection('home')">Dashboard</button></li>
         <li><button type="button" class="nav-button" [class.active]="currentPage() === 'workouts'"
                 (click)="selectSection('workouts')">Workouts</button></li>
         <li><button type="button" class="nav-button" [class.active]="currentPage() === 'history'"
@@ -79,10 +77,6 @@
                 <h2>{{ sectionHeading }}</h2>
                 <p>{{ sectionSubtitle }}</p>
             </div>
-
-            @if (currentPage() === 'home') {
-            <app-workout-form viewMode="home"></app-workout-form>
-            }
 
             @if (currentPage() === 'workouts') {
             <div class="workout-panel">

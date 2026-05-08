@@ -14,14 +14,14 @@ import { WorkoutService, Workout } from './services/workout';
 export class App implements OnInit {
     title = 'FitTrack - Workout Tracker';
     workoutService = inject(WorkoutService);
-    currentPage = signal<'home' | 'workouts' | 'history' | 'about'>('home');
+    currentPage = signal< 'workouts' | 'history' | 'about'>('workouts');
     selectedWorkout = signal<Workout | null>(null);
 
     ngOnInit(): void {
         this.workoutService.fetchWorkouts();
     }
 
-    selectSection(section: 'home' | 'workouts' | 'history' | 'about'): void {
+    selectSection(section: 'workouts' | 'history' | 'about'): void {
         this.currentPage.set(section);
         if (section !== 'history') {
             this.selectedWorkout.set(null);
@@ -87,9 +87,6 @@ export class App implements OnInit {
 
     get sectionHeading(): string {
         const page = this.currentPage();
-        if (page === 'home') {
-            return 'Dashboard';
-        }
         if (page === 'workouts') {
             return 'Log a Workout';
         }
@@ -104,9 +101,6 @@ export class App implements OnInit {
 
     get sectionSubtitle(): string {
         const page = this.currentPage();
-        if (page === 'home') {
-            return 'Your fitness overview and quick actions.';
-        }
         if (page === 'workouts') {
             return 'Use the form below to save your exercise session.';
         }
